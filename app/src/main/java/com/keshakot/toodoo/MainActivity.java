@@ -1,5 +1,6 @@
 package com.keshakot.toodoo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -19,10 +21,11 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout linearLayoutNotes;
+    private RecyclerView recyclerViewNotes;
+//    private LinearLayout linearLayoutNotes;
     private FloatingActionButton floatingActionButtonAddNote;
 
-    private ArrayList<Note> notes = new ArrayList<>();
+    private Database database = Database.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,26 +33,42 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
 
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            Note note = new Note(i, "Note " + i, random.nextInt(3));
-            notes.add(note);
-        }
+        floatingActionButtonAddNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = AddNoteActivity.newIntent(MainActivity.this);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         showNotes();
     }
 
     private void initViews() {
-        linearLayoutNotes = findViewById(R.id.linearLayoutNotes);
+        recyclerViewNotes = findViewById(R.id.recyclerViewNotes);
+//        linearLayoutNotes = findViewById(R.id.linearLayoutNotes);
         floatingActionButtonAddNote = findViewById(R.id.floatingActionButtonAddNote);
     }
 
     private void showNotes() {
-        for (Note note : notes) {
+        linearLayoutNotes.removeAllViews();
+        for (Note note : database.getNotes()) {
             View view = getLayoutInflater().inflate(
                     R.layout.note_item,
                     linearLayoutNotes,
                     false
             );
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    database.remove(note.getId());
+                    showNotes();
+                }
+            });
             TextView textViewNote = view.findViewById(R.id.textViewNote);
             textViewNote.setText(note.getText());
 

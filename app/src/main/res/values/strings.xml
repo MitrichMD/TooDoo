@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TooDoo</string>
+    <string name="enter_note_hint">Enter note:</string>
+    <string name="priority_low">Low</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_high">High</string>
+    <string name="button_save">Save</string>
+    <string name="toast_note_not_input">Вы ничего не ввели</string>
 </resources>

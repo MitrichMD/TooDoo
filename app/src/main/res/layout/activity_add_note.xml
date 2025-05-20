@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearAddNote"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddNoteActivity">
+
+    <EditText
+        android:autofillHints="@null"
+        android:id="@+id/editTextEnterNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:hint="@string/enter_note_hint"
+        android:inputType="textPersonName" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupNotePriority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="16dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioButtonPriorityLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_green_light"
+            android:padding="8dp"
+            android:text="@string/priority_low"
+            android:textColor="@android:color/white" />
+
+        <RadioButton
+            android:id="@+id/radioButtonPriorityMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_light"
+            android:checked="true"
+            android:padding="8dp"
+            android:text="@string/priority_medium"
+            android:textColor="@android:color/white" />
+
+        <RadioButton
+            android:id="@+id/radioButtonPriorityHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_light"
+            android:padding="8dp"
+            android:text="@string/priority_high"
+            android:textColor="@android:color/white" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonSaveNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/button_save"
+        android:textAllCaps="true">
+    </Button>
+
+</LinearLayout>
