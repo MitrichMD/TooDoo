@@ -21,6 +21,11 @@
         android:id="@+id/recyclerViewNotes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:layout_editor_absoluteX="81dp"
+        tools:layout_editor_absoluteY="-213dp"
+        tools:listitem="@layout/note_item"
+        tools:itemCount="5"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
