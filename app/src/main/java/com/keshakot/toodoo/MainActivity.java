@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,14 +26,27 @@ public class MainActivity extends AppCompatActivity {
     private NotesAdapter notesAdapter;
 
 //    private Database database = Database.getInstance();
-    private  NoteDatabase noteDatabase;
+//    private  NoteDatabase noteDatabase;
 //    private Handler handler = new Handler(Looper.getMainLooper());
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        noteDatabase = NoteDatabase.getInstance(getApplication());
+//        viewModel = new MainViewModel(getApplication());
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel.getCount().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer count) {
+                Toast.makeText(
+                        MainActivity.this,
+                        String.valueOf(count),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+//        noteDatabase = NoteDatabase.getInstance(getApplication());
         initViews();
 
         notesAdapter = new NotesAdapter();
@@ -40,12 +55,16 @@ public class MainActivity extends AppCompatActivity {
             public void onNoteClick(Note note) {
 //                database.remove(note.getId());
 //                showNotes();
+                viewModel.showCount();
+//                int count = viewModel.getCount();
+
             }
         });
         recyclerViewNotes.setAdapter(notesAdapter);
 //        recyclerViewNotes.setLayoutManager(LinearLayoutManager(this));
 
-        noteDatabase.notesDao().getNotes().observe(this, new Observer<List<Note>>() {
+//        noteDatabase.notesDao().getNotes().observe(this, new Observer<List<Note>>() {
+        viewModel.getNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
                     notesAdapter.setNotes(notes);
@@ -69,20 +88,21 @@ public class MainActivity extends AppCompatActivity {
                     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                         int position = viewHolder.getAdapterPosition();
                         Note note = notesAdapter.getNotes().get(position);
-//                        database.remove(note.getId());
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                noteDatabase.notesDao().remove(note.getId());
-//                                handler.post(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        showNotes();
-//                                    }
-//                                });
-                            }
-                        });
-                        thread.start();
+////                        database.remove(note.getId());
+//                        Thread thread = new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                noteDatabase.notesDao().remove(note.getId());
+////                                handler.post(new Runnable() {
+////                                    @Override
+////                                    public void run() {
+////                                        showNotes();
+////                                    }
+////                                });
+//                            }
+//                        });
+//                        thread.start();
+                        viewModel.remove(note);
                     }
                 });
         itemTouchHelper.attachToRecyclerView(recyclerViewNotes);
