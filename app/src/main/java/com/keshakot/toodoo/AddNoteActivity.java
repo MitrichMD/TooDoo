@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 public class AddNoteActivity extends AppCompatActivity {
 
@@ -26,14 +28,22 @@ public class AddNoteActivity extends AppCompatActivity {
     private Button buttonSaveNote;
 
 //    private Database database = Database.getInstance();
-    private NoteDatabase noteDatabase;
-    private Handler handler = new Handler(Looper.getMainLooper());
+//    private NoteDatabase noteDatabase;
+//    private Handler handler = new Handler(Looper.getMainLooper());
+    private AddNoteViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
-        noteDatabase = NoteDatabase.getInstance(getApplication());
+        viewModel = new ViewModelProvider(this).get(AddNoteViewModel.class);
+//        noteDatabase = NoteDatabase.getInstance(getApplication());
+        viewModel.getShouldCloseScreen().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean shouldClose) {
+                if (shouldClose) finish();
+            }
+        });
         initViews();
         buttonSaveNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,19 +64,22 @@ public class AddNoteActivity extends AppCompatActivity {
         int priority = getPriority();
 //        int id = database.getNotes().size();
         Note note = new Note(0, text, priority);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                noteDatabase.notesDao().add(note);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                });
-            }
-        });
-        thread.start();
+        viewModel.saveNote(note);
+
+
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                noteDatabase.notesDao().add(note);
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        finish();
+//                    }
+//                });
+//            }
+//        });
+//        thread.start();
     }
 
     private int getPriority() {
